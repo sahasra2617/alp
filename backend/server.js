@@ -12,8 +12,21 @@ const Subject = require('./models/Subject');
 
 const app = express();
 
-// Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Initialize Gemini
+let genAI;
+let model;
+
+try {
+  if (!process.env.GEMINI_API_KEY) {
+    console.error('GEMINI_API_KEY is not set in environment variables');
+  } else {
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    console.log('Gemini Flash 2.0 initialized successfully');
+  }
+} catch (error) {
+  console.error('Error initializing Gemini Flash 2.0:', error);
+}
 
 // Connect to MongoDB
 connectDB()
@@ -241,36 +254,67 @@ app.post('/api/subjects/:subjectId/subtopics/:subtopicId/generate', auth, async 
       return res.status(404).json({ message: 'Subtopic not found' });
     }
 
-    // Generate content based on subject and subtopic
-    let content = '';
-    switch(subtopic.name.toLowerCase()) {
-      case 'introduction to python':
-        content = `Python is a high-level, interpreted programming language known for its simplicity and readability. Created by Guido van Rossum in 1991, Python has become one of the most popular programming languages worldwide.\n\nKey Features of Python:\n1. Easy to Learn and Read\n2. Large Standard Library\n3. Cross-platform Compatibility\n4. Dynamic Typing\n5. Object-Oriented Programming Support\n\nPython is widely used in:\n- Web Development\n- Data Science\n- Artificial Intelligence\n- Scientific Computing\n- Automation and Scripting`;
-        break;
-      case 'variables and data types':
-        content = `Variables in Python are containers for storing data values. Python has several built-in data types:\n\n1. Numeric Types:\n- int (integers)\n- float (decimal numbers)\n- complex (complex numbers)\n\n2. Text Type:\n- str (strings)\n\n3. Sequence Types:\n- list (ordered, mutable)\n- tuple (ordered, immutable)\n\n4. Mapping Type:\n- dict (key-value pairs)\n\n5. Set Types:\n- set (unordered, unique elements)\n- frozenset (immutable set)\n\nExample:\nx = 5 # integer\nname = "Python" # string\nnumbers = [1, 2, 3] # list`;
-        break;
-      case 'control structures':
-        content = `Control structures in Python help control the flow of program execution:\n\n1. Conditional Statements:\nif condition:\n    # code block\nelif condition:\n    # code block\nelse:\n    # code block\n\n2. Loops:\n- for loop (iteration over sequences)\n- while loop (condition-based iteration)\n\n3. Loop Control:\n- break (exit loop)\n- continue (skip iteration)\n- pass (null operation)\n\nExample:\nfor i in range(5):\n    if i == 2:\n        continue\n    print(i)`;
-        break;
-      case 'functions and modules':
-        content = `Functions in Python are blocks of reusable code:\n\n1. Function Definition:\ndef function_name(parameters):\n    # code block\n    return value\n\n2. Function Types:\n- Built-in functions\n- User-defined functions\n- Lambda functions\n\n3. Modules:\n- Collections of functions\n- Import using 'import' keyword\n- Create custom modules\n\nExample:\ndef greet(name):\n    return f"Hello, {name}!"\n\nimport math\nprint(math.pi)`;
-        break;
-      case 'object-oriented programming':
-        content = `Object-Oriented Programming (OOP) in Python:\n\n1. Classes and Objects:\nclass ClassName:\n    def __init__(self):\n        # constructor\n    def method(self):\n        # method code\n\n2. OOP Concepts:\n- Inheritance\n- Encapsulation\n- Polymorphism\n- Abstraction\n\n3. Special Methods:\n- __init__ (constructor)\n- __str__ (string representation)\n- __len__ (length)\n\nExample:\nclass Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        return "Woof!"`;
-        break;
-      default:
-        content = `Content for ${subtopic.name}:\n\nThis section covers the fundamentals and key concepts of ${subtopic.name}. The content includes detailed explanations, examples, and practical applications.\n\nKey Points:\n1. Basic Concepts\n2. Advanced Topics\n3. Practical Examples\n4. Best Practices\n5. Common Use Cases`;
+    if (!model) {
+      return res.status(500).json({ message: 'Gemini Flash 2.0 model not initialized. Please check your API key configuration.' });
     }
 
-    subtopic.content = content;
+    // Enhanced prompt for better content generation
+    const prompt = `Generate comprehensive educational content about "${subtopic.name}" in the context of "${subject.name}".
+    
+    Please structure the content in the following format using proper markdown:
+
+    # ${subtopic.name}
+
+    ## Overview
+    [Provide a brief introduction and overview of the topic]
+
+    ## Key Concepts
+    [List and explain the main concepts with clear definitions]
+
+    ## Detailed Explanation
+    [Provide detailed explanations with examples]
+
+    ## Examples
+    [Include practical examples with code snippets if applicable]
+
+    ## Best Practices
+    [List important best practices and tips]
+
+    ## Common Mistakes
+    [Highlight common mistakes and how to avoid them]
+
+    ## Summary
+    [Provide a concise summary of the key points]
+
+    Please ensure:
+    1. Use proper markdown formatting for headings, lists, and code blocks
+    2. Include relevant examples and code snippets where appropriate
+    3. Make the content engaging and easy to understand
+    4. Use bullet points and numbered lists for better readability
+    5. Include practical applications and real-world examples`;
+
+    console.log('Generating content with enhanced prompt for:', subtopic.name);
+    
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    let generatedContent = response.text();
+
+    // Replace any occurrences of "Common Pitfalls" with "Common Mistakes"
+    generatedContent = generatedContent.replace(/## Common Pitfalls/g, '## Common Mistakes');
+
+    console.log('Content generated successfully for:', subtopic.name);
+
+    subtopic.content = generatedContent;
     subtopic.generated = true;
     await subject.save();
 
-    res.json({ content });
+    res.json({ content: generatedContent });
   } catch (error) {
     console.error('Error in content generation:', error);
-    res.status(500).json({ message: 'Error generating content' });
+    res.status(500).json({ 
+      message: 'Error generating content',
+      error: error.message 
+    });
   }
 });
 
@@ -307,9 +351,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-
-
 
 
 console.log('JWT_SECRET:', process.env.JWT_SECRET);

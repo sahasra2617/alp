@@ -318,7 +318,8 @@
   font-weight: 600;
   color: white;
   position: absolute;
-  bottom: 0;
+  top:80px;
+  bottom:0;
   left: 0;
   right: 0;
   text-align: center;

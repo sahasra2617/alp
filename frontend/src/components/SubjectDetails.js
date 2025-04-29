@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import './SubjectDetails.css';
 
 function SubjectDetails() {
@@ -178,8 +179,8 @@ function SubjectDetails() {
           <div className="content-area">
             <div className="document-content" style={{ fontSize: `${zoomLevel}%` }}>
               <div className="document-header">
-                <h1 className="document-title">{subject.name.toUpperCase()}</h1>
-                <h4 className="subtopic-title">TOPIC- {currentSubtopic.name.toUpperCase()}</h4>
+                {/* <h1 className="document-title">{subject.name.toUpperCase()}</h1> */}
+                {/* <h4 className="subtopic-title">TOPIC- {currentSubtopic.name.toUpperCase()}</h4> */}
               </div>
               <div className="document-body">
                 {isLoading ? (
@@ -188,9 +189,9 @@ function SubjectDetails() {
                   <div className="error">{error}</div>
                 ) : showContent ? (
                   <>
-                    {currentSubtopic.content.split('\n\n').map((paragraph, index) => (
-                      <p key={index}>{paragraph}</p>
-                    ))}
+                    <div className="markdown-content">
+                      <ReactMarkdown>{currentSubtopic.content}</ReactMarkdown>
+                    </div>
                     <div className="quiz-button-container">
                       <button className="quiz-button" onClick={handleStartQuiz}>
                         Take Quiz 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
+import { instructorPlaceholder, coursePlaceholder } from '../assets/images/placeholder';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ function Dashboard() {
       instructor: "Dianne Edwards",
       username: "@dianneed",
       duration: "82 min",
-      image: "/images/swift-course.jpg"
+      image: coursePlaceholder
     },
     {
       id: 2,
@@ -27,7 +28,7 @@ function Dashboard() {
       instructor: "Dianne Edwards",
       username: "@dianneed",
       duration: "90 min",
-      image: "/images/illustration-course.jpg"
+      image: coursePlaceholder
     }
   ];
 
@@ -92,6 +93,8 @@ function Dashboard() {
       return "https://cdn-icons-png.flaticon.com/512/5968/5968350.png";
     } else if (lowerName.includes('math')) {
       return "https://cdn-icons-png.flaticon.com/512/2103/2103633.png";
+    } else if (lowerName.includes('science')) {
+      return "https://cdn-icons-png.flaticon.com/512/3081/3081478.png";
     } else {
       return "https://cdn-icons-png.flaticon.com/512/2103/2103633.png";
     }
@@ -105,6 +108,8 @@ function Dashboard() {
       return "#4B8BBE";
     } else if (lowerName.includes('math')) {
       return "#4CAF50";
+    } else if (lowerName.includes('science')) {
+      return "#2196F3";
     } else {
       return "#512888";
     }
@@ -118,6 +123,8 @@ function Dashboard() {
       return "linear-gradient(135deg,rgb(181, 211, 236) 0%,rgb(124, 195, 195) 100%)";
     } else if (lowerName.includes('math')) {
       return "linear-gradient(135deg,rgb(181, 236, 211) 0%,rgb(124, 195, 124) 100%)";
+    } else if (lowerName.includes('science')) {
+      return "linear-gradient(135deg,rgb(173, 216, 230) 0%,rgb(0, 191, 255) 100%)";
     } else {
       return "linear-gradient(135deg,rgb(211, 181, 236) 0%,rgb(124, 124, 195) 100%)";
     }
@@ -166,6 +173,11 @@ function Dashboard() {
     });
   };
 
+  // Filter subjects based on search query
+  const filteredSubjects = subjects.filter(subject => 
+    subject.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="eduera-dashboard">
       <div className="sidebar">
@@ -173,7 +185,7 @@ function Dashboard() {
           <div className="logo-icon">
             <i className="fas fa-graduation-cap"></i>
           </div>
-          <span>EduEra</span>
+          <span>G324</span>
         </div>
         <div className="nav-menu">
           <ul>
@@ -195,10 +207,6 @@ function Dashboard() {
             </li>
           </ul>
         </div>
-        <button className="start-btn">
-          <i className="fas fa-play"></i>
-          <span>Start Learning</span>
-        </button>
       </div>
       <div className="main-content">
         <div className="header">
@@ -206,7 +214,7 @@ function Dashboard() {
             <i className="fas fa-search"></i>
             <input 
               type="text" 
-              placeholder="Search for courses..." 
+              placeholder="Search for subjects..." 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -244,7 +252,7 @@ function Dashboard() {
               <div className="course-image" style={{ backgroundImage: `url(${course.image})` }}>
                 <div className="course-overlay">
                   <div className="instructor-info">
-                    <img src="/images/instructor.jpg" alt="Instructor" />
+                    <img src={instructorPlaceholder} alt="Instructor" />
                     <div className="instructor-text">
                       <h4>{course.instructor}</h4>
                       <p>{course.username}</p>
@@ -271,21 +279,27 @@ function Dashboard() {
           <div className="error">{error}</div>
         ) : (
           <div className="subjects-container">
-            <div className="subjects-grid">
-              {subjects.map(subject => (
-                <div 
-                  key={subject.id} 
-                  className="subject-card" 
-                  style={{ background: subject.background }}
-                  onClick={() => handleSubjectClick(subject)}
-                >
-                  <div className="subject-content">
-                    <img src={subject.icon} alt={subject.name} />
-                    <h3>{subject.name}</h3>
+            {filteredSubjects.length === 0 ? (
+              <div className="no-results">
+                No subjects found matching "{searchQuery}"
+              </div>
+            ) : (
+              <div className="subjects-grid">
+                {filteredSubjects.map(subject => (
+                  <div 
+                    key={subject.id} 
+                    className="subject-card" 
+                    style={{ background: subject.background }}
+                    onClick={() => handleSubjectClick(subject)}
+                  >
+                    <div className="subject-content">
+                      <img src={subject.icon} alt={subject.name} />
+                      <h3>{subject.name}</h3>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
         
@@ -310,10 +324,6 @@ function Dashboard() {
                   </div>
                 ))}
               </div>
-              <button className="records-btn">
-                <i className="fas fa-chart-line"></i>
-                View Records
-              </button>
             </div>
           </div>
         )}

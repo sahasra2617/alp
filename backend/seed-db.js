@@ -24,12 +24,26 @@ const subjects = [
     imageUrl: "https://example.com/python.jpg",
     subtopics: [
       { name: "Introduction to Python", content: "", generated: false },
-      { name: "Variables and Data Types", content: "", generated: false },
-      { name: "Control Structures", content: "", generated: false },
-      { name: "Functions and Modules", content: "", generated: false },
-      { name: "Object-Oriented Programming", content: "", generated: false }
+      { name: "Data Types", content: "", generated: false },
+      { name: "Strings", content: "", generated: false },
+      { name: "Functions", content: "", generated: false },
+      { name: "Inheritance", content: "", generated: false }
     ]
   },
+
+  {
+    name: "Science",
+    description: "Explore the wonders of SCIENCE",
+    imageUrl: "https://example.com/plants.jpg",
+    subtopics: [
+      { name: "Plants", content: "", generated: false },
+      { name: "Animals", content: "", generated: false },
+      { name: "Digestive System", content: "", generated: false },
+      // { name: "", content: "", generated: false },
+      // { name: "Inheritance", content: "", generated: false }
+    ]
+  },
+
   {
     name: "Mathematics",
     description: "Fundamental mathematics concepts",
