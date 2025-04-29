@@ -1,0 +1,376 @@
+.subject-details-container {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #e6f0ff;
+}
+
+.subject-details-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.subject-header {
+  background-color: #512888;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  color: white;
+}
+
+.main-container {
+  flex: 1;
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  height: calc(100vh - 64px); /* Subtract header height */
+  overflow: hidden;
+}
+
+.action-sidebar {
+  width: 300px;
+  min-width: 300px;
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 100px); /* Adjust for header and padding */
+  position: sticky;
+  top: 80px;
+}
+
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.document-content {
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: calc(100vh - 100px);
+}
+
+.subtopics-list {
+  flex: 1;
+  overflow-y: auto;
+  margin: 1rem 0;
+}
+
+.read-btn {
+  background-color: #512888;
+  color: white;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+  transition: background-color 0.3s;
+}
+
+.read-btn:hover {
+  background-color: #3a1c63;
+}
+
+.document-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.document-title {
+  color: #512888;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.subtopic-title {
+  color: #ff0000;
+  font-size: 1.2rem;
+}
+
+.document-body {
+  line-height: 1.8;
+  color: #333;
+}
+
+.document-body p {
+  margin-bottom: 1.5rem;
+  text-align: justify;
+}
+
+.content-placeholder {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+}
+
+.loading {
+  text-align: center;
+  color: #666;
+  padding: 2rem;
+}
+
+.error {
+  color: #ff0000;
+  text-align: center;
+  padding: 2rem;
+  background: #fff5f5;
+  border-radius: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .main-container {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+  }
+
+  .action-sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    margin-bottom: 1rem;
+  }
+
+  .content-area {
+    padding-right: 0;
+  }
+
+  .document-content {
+    padding: 2rem;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .subject-header {
+    padding: 1rem;
+  }
+
+  .document-title {
+    font-size: 1.5rem;
+  }
+
+  .subtopic-title {
+    font-size: 1rem;
+  }
+}
+
+/* Quiz Button Styles */
+.quiz-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.quiz-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.quiz-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.back-btn {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.back-btn:hover {
+  color: #333;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.card-header h2 {
+  color: #8868b4;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.subtopic-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(to right, #b4a2d1, #e6f0ff);
+  border-radius: 12px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.subtopic-item:hover {
+  transform: translateX(10px);
+  box-shadow: 0 4px 12px rgba(157, 216, 183, 0.1);
+}
+
+.rank {
+  background-color: #ffd6e6;
+  color: #a366f3;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.subtopic-name {
+  color: #512888;
+  font-size: 1.1rem;
+}
+
+.content-view {
+  padding: 1rem;
+}
+
+.content-view h2 {
+  color: #512888;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.content-text {
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.content-text p {
+  margin-bottom: 1rem;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.action-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  background-color: #f0e6ff;
+  color: #512888;
+}
+
+.action-btn:hover {
+  background-color: #512888;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-center {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.nav-btn,
+.zoom-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.nav-btn i,
+.zoom-btn i {
+  font-size: 1.5rem;
+}
+
+.nav-btn:hover,
+.zoom-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.zoom-level {
+  font-size: 1.1rem;
+  color: white;
+  min-width: 4rem;
+  text-align: center;
+}
+
+.sidebar-title {
+  color: #512888;
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid rgba(81, 40, 136, 0.1);
+}
+
+.subtopic-btn {
+  text-align: left;
+  padding: 0.8rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #512888;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.subtopic-btn:hover {
+  background: rgba(81, 40, 136, 0.05);
+  border-left-color: #512888;
+}
+
+.subtopic-btn.active {
+  background: rgba(81, 40, 136, 0.1);
+  border-left-color: #512888;
+  font-weight: 500;
+} 
