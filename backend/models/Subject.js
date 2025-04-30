@@ -1,5 +1,26 @@
 const mongoose = require('mongoose');
 
+const quizResultSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  score: {
+    type: Number,
+    required: true
+  },
+  emotion: {
+    type: String,
+    required: true,
+    enum: ['happy', 'surprise', 'neutral', 'sad', 'angry']
+  },
+  timestamp: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 const subtopicSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -18,7 +39,8 @@ const subtopicSchema = new mongoose.Schema({
   generated: {
     type: Boolean,
     default: false
-  }
+  },
+  quizResults: [quizResultSchema]
 });
 
 const subjectSchema = new mongoose.Schema({

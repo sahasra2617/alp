@@ -7,7 +7,7 @@ const Subject = require('./models/Subject');
 // Sample subjects and subtopics
 const subjects = [
   {
-    name: "Java Programming",
+    name: "Java ",
     description: "Learn Java programming from basics to advanced concepts",
     imageUrl: "https://example.com/java.jpg",
     subtopics: [
@@ -19,7 +19,7 @@ const subjects = [
     ]
   },
   {
-    name: "Python Programming",
+    name: "Python",
     description: "Master Python programming language",
     imageUrl: "https://example.com/python.jpg",
     subtopics: [

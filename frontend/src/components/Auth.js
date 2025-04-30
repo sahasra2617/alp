@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 import './Auth.css';
 
 function Auth() {
@@ -45,7 +46,7 @@ function Auth() {
         return;
       }
       try {
-        const response = await axios.post('http://localhost:5000/api/auth/signup', { username, email, password });
+        const response = await axios.post(`${config.apiBaseUrl}/auth/signup`, { username, email, password });
         setSuccess('Account created successfully!');
         setTimeout(() => {
           setMode('login');
@@ -63,12 +64,16 @@ function Auth() {
       }
     } else {
       try {
-        const response = await axios.post('/api/auth/login', { email, password });
-        localStorage.setItem('token', response.data.token);
-        setSuccess('Login successful!!!');
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 1500);
+        const response = await axios.post(`${config.apiBaseUrl}/auth/login`, { email, password });
+        if (response.data && response.data.token) {
+          localStorage.setItem('token', response.data.token);
+          setSuccess('Login successful!!!');
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 1500);
+        } else {
+          setError('Invalid response from server');
+        }
       } catch (err) {
         const errorMessage = err.response?.data?.message || 'An error occurred during login';
         setError(errorMessage);

@@ -108,11 +108,30 @@
 
 .user-profile-container {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome-message {
+  color: #512888;
+  font-size: 1rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .user-profile-btn,
 .chat-btn {
-  background: white;
+  background: rgb(191, 189, 189);
   border: none;
   width: 40px;
   height: 40px;
@@ -318,7 +337,7 @@
   font-weight: 600;
   color: white;
   position: absolute;
-  top:80px;
+  top:100px;
   bottom:0;
   left: 0;
   right: 0;
@@ -361,7 +380,7 @@
 
 .subtopics-list li::before {
   content: "•";
-  color: #5D4FEC;
+  color: #6259c7;
   font-size: 1.2rem;
 }
 

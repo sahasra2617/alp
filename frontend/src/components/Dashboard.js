@@ -12,6 +12,7 @@ function Dashboard() {
   const [subjects, setSubjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [username, setUsername] = useState('');
 
   const unfinishedCourses = [
     {
@@ -82,6 +83,48 @@ function Dashboard() {
     };
     
     fetchSubjects();
+  }, []);
+  
+  // Fetch user info from API
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+          setError('Authentication required. Please log in.');
+          return;
+        }
+        
+        const response = await fetch('/api/auth/user', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        
+        if (!response.ok) {
+          if (response.status === 401) {
+            throw new Error('Authentication failed. Please log in again.');
+          } else {
+            throw new Error(`Server error: ${response.status}`);
+          }
+        }
+        
+        const data = await response.json();
+        if (data.username) {
+          setUsername(data.username);
+        } else {
+          console.error('Username not found in response');
+          setUsername('User');
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+        setError('Failed to load user information');
+        setUsername('User');
+      }
+    };
+    
+    fetchUserInfo();
   }, []);
   
   // Helper functions to get subject styling
@@ -163,14 +206,7 @@ function Dashboard() {
   };
 
   const handleSubjectClick = (subject) => {
-    setSelectedSubject(subject);
-    setShowModal(true);
-  };
-
-  const handleSubtopicClick = (subtopicIndex) => {
-    navigate(`/subject/${selectedSubject.id}`, { 
-      state: { selectedSubtopic: subtopicIndex } 
-    });
+    navigate(`/subject/${subject.id}`);
   };
 
   // Filter subjects based on search query
@@ -221,6 +257,9 @@ function Dashboard() {
           </div>
           <div className="header-right">
             <div className="user-profile-container">
+              <div className="welcome-message">
+                Welcome, {username || 'User'}!
+              </div>
               <button className="user-profile-btn" onClick={toggleLogout}>
                 <i className="fas fa-user"></i>
               </button>
@@ -300,31 +339,6 @@ function Dashboard() {
                 ))}
               </div>
             )}
-          </div>
-        )}
-        
-        {showModal && selectedSubject && (
-          <div className="modal-overlay" onClick={() => setShowModal(false)}>
-            <div className="subtopics-modal" onClick={e => e.stopPropagation()}>
-              <div className="modal-header">
-                <h2>{selectedSubject.name}</h2>
-                <button className="close-btn" onClick={() => setShowModal(false)}>
-                  <i className="fas fa-times"></i>
-                </button>
-              </div>
-              <div className="subtopics-list">
-                {selectedSubject.subtopics.map((subtopic, index) => (
-                  <div 
-                    key={index} 
-                    className="subtopic-item"
-                    onClick={() => handleSubtopicClick(index)}
-                  >
-                    <div className="rank">{index + 1}</div>
-                    <div className="subtopic-name">{subtopic.name}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         )}
       </div>
